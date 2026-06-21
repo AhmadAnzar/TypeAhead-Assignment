@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.env
+viva_notes.md
+text.txt
+*.log
+rough_sets

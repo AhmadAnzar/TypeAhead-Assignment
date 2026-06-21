@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Typeahead System</title>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Search Typeahead</h1>
+      <p class="subtitle">Consistent Hashing Cache Ring & Batch DB Writes</p>
+    </header>
+
+    <!-- Google-Like Search Input Box -->
+    <div class="search-wrapper">
+      <div class="input-container">
+        <!-- SVG magnifying glass -->
+        <svg class="search-icon" viewBox="0 0 24 24">
+          <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+        </svg>
+        <input type="text" id="search-input" placeholder="Search prefix (e.g. 'world', 'iphone')..." autocomplete="off">
+        <!-- Loading spinner container -->
+        <div class="spinner" id="loading-spinner"></div>
+      </div>
+      <ul class="suggestions-list" id="suggestions"></ul>
+    </div>
+
+    <!-- Minimalistic Performance Stats Box -->
+    <div class="stats-box">
+      <div class="stat-group">
+        <span class="stat-label">Connection</span>
+        <span class="stat-value"><span class="status-dot"></span>Connected</span>
+      </div>
+      <div class="stat-group">
+        <span class="stat-label">Latency</span>
+        <span class="stat-value" id="stat-latency">- ms</span>
+      </div>
+      <div class="stat-group">
+        <span class="stat-label">Data Source</span>
+        <span class="stat-value" id="stat-source">-</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="notification" id="notif">Search logged in memory buffer!</div>
+
+  <script src="script.js"></script>
+</body>
+</html>
