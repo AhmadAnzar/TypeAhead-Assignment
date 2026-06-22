@@ -4,9 +4,9 @@
   "description": "High-performance, ultra-low latency Search Typeahead System with consistent hashing and batch writes.",
   "main": "server.ts",
   "scripts": {
-    "dev": "ts-node server.ts",
+    "dev": "ts-node src/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js",
+    "start": "node dist/src/server.js",
     "seed": "ts-node seed.ts"
   },
   "dependencies": {

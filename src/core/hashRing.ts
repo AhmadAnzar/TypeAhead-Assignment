@@ -3,26 +3,6 @@ import Redis from 'ioredis';
 
 /**
  * Consistent Hash Ring implementation.
- * 
- * --- HOW CONSISTENT HASHING WORKS (VIVA EXPLANATION) ---
- * In a traditional hash-based routing system (e.g., node = hash(key) % N):
- * If a node is added or removed, N changes, and almost all keys map to different nodes. 
- * This causes a massive cache storm where almost all cache entries miss.
- * 
- * Consistent Hashing solves this by mapping both the keys and the servers to a circular 360-degree space (the "ring").
- * 
- * 1. THE HASH RING:
- *    We hash the server names (e.g., 'redis-a', 'redis-b') to locate them on the ring (from 0x00000000... to 0xffffffff...).
- * 2. VIRTUAL NODES:
- *    If we only hash the 3 servers once, they might not be distributed evenly on the ring, causing "hotspots" 
- *    where one server handles 80% of the traffic. To prevent this, we create 100 "Virtual Nodes" per physical server 
- *    (e.g., 'redis-a-0', 'redis-a-1', ..., 'redis-a-99'). This distributes the servers evenly across the ring.
- * 3. ROUTING/LOOKUP:
- *    When querying a key (e.g., 'suggest:ap'):
- *    - We hash the key to get its position on the ring.
- *    - We travel clockwise (ascending order) until we find the first virtual node hash that is >= our key's hash.
- *    - If we go past the highest hash, we wrap around to the first virtual node at the start of the ring.
- *    - We route the request to the physical Redis client corresponding to that virtual node.
  */
 export class HashRing {
   // A sorted list of virtual node hashes (MD5 hex strings) representing positions on the ring.

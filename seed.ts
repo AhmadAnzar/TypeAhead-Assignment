@@ -1,7 +1,7 @@
 import fs from 'fs';
 import readline from 'readline';
 import path from 'path';
-import { pool, initializeDatabase } from './db';
+import { pool, initializeDatabase } from './src/core/db';
 
 /**
  * Seeding Script.
