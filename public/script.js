@@ -2,6 +2,7 @@
     const suggestionsList = document.getElementById('suggestions');
     const statLatency = document.getElementById('stat-latency');
     const statSource = document.getElementById('stat-source');
+    const statNode = document.getElementById('stat-node');
     const notification = document.getElementById('notif');
     const spinner = document.getElementById('loading-spinner');
 
@@ -106,7 +107,10 @@
         statLatency.textContent = `${latency} ms`;
 
         const cacheHeader = res.headers.get('X-Cache');
-        statSource.textContent = cacheHeader === 'HIT' ? 'Redis Cache' : 'PostgreSQL Database';
+        statSource.textContent = cacheHeader === 'HIT' ? 'Redis Cache' : (cacheHeader === 'FALLBACK' ? 'Postgres (Fallback)' : 'PostgreSQL Database');
+        
+        const nodeHeader = res.headers.get('X-Redis-Node');
+        statNode.textContent = nodeHeader || '-';
         
         displaySuggestions(data);
       } catch (err) {
@@ -223,6 +227,7 @@
       spinner.classList.remove('visible');
       statSource.textContent = '-';
       statLatency.textContent = '- ms';
+      statNode.textContent = '-';
     }
 
     // Trigger Search (Simulate the Write Path)
@@ -235,9 +240,10 @@
           },
           body: JSON.stringify({ query })
         });
-        await response.json();
+        const data = await response.json();
 
-        // Show a brief standard notification
+        // Dynamically show the actual API response message
+        notification.textContent = `API: ${data.message || 'Searched'}`;
         notification.classList.add('show');
         setTimeout(() => {
           notification.classList.remove('show');

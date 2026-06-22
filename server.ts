@@ -35,6 +35,13 @@ app.get('/suggest', async (req, res) => {
   // Find the mapped Redis client using Consistent Hashing.
   // This guarantees that the key is routed to the exact same Redis node every time.
   const redisNode = hashRing.getNode(cacheKey);
+  let nodeName = 'unknown';
+  for (const [name, client] of Object.entries(hashRing.clients)) {
+    if (client === redisNode) {
+      nodeName = name;
+      break;
+    }
+  }
 
   try {
     // Step A: Attempt to fetch from Redis cache (O(1) operation)
@@ -43,6 +50,7 @@ app.get('/suggest', async (req, res) => {
       // CACHE HIT: Return instantly.
       // We append a header to verify the hit during testing.
       res.setHeader('X-Cache', 'HIT');
+      res.setHeader('X-Redis-Node', nodeName);
       return res.json(JSON.parse(cachedData));
     }
 
@@ -76,6 +84,7 @@ app.get('/suggest', async (req, res) => {
     await redisNode.setex(cacheKey, 300, JSON.stringify(suggestions));
 
     res.setHeader('X-Cache', 'MISS');
+    res.setHeader('X-Redis-Node', nodeName);
     return res.json(suggestions);
 
   } catch (error: any) {
@@ -102,6 +111,8 @@ app.get('/suggest', async (req, res) => {
         `,
         [`${queryPrefix}%`]
       );
+      res.setHeader('X-Cache', 'FALLBACK');
+      res.setHeader('X-Redis-Node', 'N/A');
       return res.json(dbResult.rows.map(row => row.query));
     } catch (dbError: any) {
       console.error('[Suggest DB Fallback Error]:', dbError.message);
