@@ -41,8 +41,8 @@ function makeRequest(url: string): Promise<RequestMetrics> {
 
 async function runBenchmark() {
   console.log('==================================================');
-  console.log(`🚀 Starting Search Typeahead Benchmark against ${SERVER_URL}`);
-  console.log(`📊 Total Requests to send: ${TOTAL_REQUESTS}`);
+  console.log(`Starting Search Typeahead Benchmark against ${SERVER_URL}`);
+  console.log(`Total Requests to send: ${TOTAL_REQUESTS}`);
   console.log('==================================================\n');
 
   const metrics: RequestMetrics[] = [];
@@ -121,7 +121,7 @@ async function runBenchmark() {
   const writeReduction = (1 - (1 / writeCount)) * 100;
 
   console.log('\n==================================================');
-  console.log('📊 PERFORMANCE METRICS REPORT');
+  console.log('PERFORMANCE METRICS REPORT');
   console.log('==================================================');
   console.log(`Average Read Latency:   ${avgLatency.toFixed(2)} ms`);
   console.log(`Median (p50) Latency:   ${p50.toFixed(2)} ms`);
